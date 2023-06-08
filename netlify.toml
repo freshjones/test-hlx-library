@@ -1,3 +1,9 @@
+[[redirects]]
+  from = "/library"
+  to = "https://delightful-trifle-9b259a.netlify.app"
+  status = 200
+  force = true
+  headers = {X-From = "Netlify"}
 [[headers]]
   for = "/*"
   [headers.values]
