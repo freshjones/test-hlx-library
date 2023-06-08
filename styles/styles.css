@@ -71,6 +71,10 @@ header {
   height: var(--nav-height);
 }
 
+#congrats-you-are-ready-to-go {
+  color: magenta;
+}
+
 h1, h2, h3,
 h4, h5, h6 {
   font-family: var(--heading-font-family);
