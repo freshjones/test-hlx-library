@@ -41,19 +41,14 @@ export function sampleRUM(checkpoint, data = {}) {
       const id = `${hashCode(window.location.href)}-${new Date().getTime()}-${Math.random().toString(16).substr(2, 14)}`;
       const random = Math.random();
       const isSelected = (random * weight < 1);
-      const urlSanitizers = {
-        full: () => window.location.href,
-        origin: () => window.location.origin,
-        path: () => window.location.href.replace(/\?.*$/, ''),
-      };
-      // eslint-disable-next-line object-curly-newline, max-len
-      window.hlx.rum = { weight, id, random, isSelected, sampleRUM, sanitizeURL: urlSanitizers[window.hlx.RUM_MASK_URL || 'path'] };
+      // eslint-disable-next-line object-curly-newline
+      window.hlx.rum = { weight, id, random, isSelected, sampleRUM };
     }
     const { weight, id } = window.hlx.rum;
     if (window.hlx && window.hlx.rum && window.hlx.rum.isSelected) {
       const sendPing = (pdata = data) => {
         // eslint-disable-next-line object-curly-newline, max-len, no-use-before-define
-        const body = JSON.stringify({ weight, id, referer: window.hlx.rum.sanitizeURL(), checkpoint, ...data });
+        const body = JSON.stringify({ weight, id, referer: window.location.href, generation: window.hlx.RUM_GENERATION, checkpoint, ...data });
         const url = `https://rum.hlx.page/.rum/${weight}`;
         // eslint-disable-next-line no-unused-expressions
         navigator.sendBeacon(url, body);
@@ -80,47 +75,66 @@ export function sampleRUM(checkpoint, data = {}) {
 
 /**
  * Loads a CSS file.
- * @param {string} href URL to the CSS file
+ * @param {string} href The path to the CSS file
  */
-export async function loadCSS(href) {
-  return new Promise((resolve, reject) => {
-    if (!document.querySelector(`head > link[href="${href}"]`)) {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      link.onload = resolve;
-      link.onerror = reject;
-      document.head.append(link);
-    } else {
-      resolve();
+export function loadCSS(href, callback) {
+  if (!document.querySelector(`head > link[href="${href}"]`)) {
+    const link = document.createElement('link');
+    link.setAttribute('rel', 'stylesheet');
+    link.setAttribute('href', href);
+    if (typeof callback === 'function') {
+      link.onload = (e) => callback(e.type);
+      link.onerror = (e) => callback(e.type);
     }
-  });
+    document.head.appendChild(link);
+  } else if (typeof callback === 'function') {
+    callback('noop');
+  }
 }
 
 /**
- * Loads a non module JS file.
- * @param {string} src URL to the JS file
- * @param {Object} attrs additional optional attributes
+ * Loads a JS file.
+ * @param {string} href The path to the JS file
  */
+export function loadScript(url, attributes, callback) {
+  const head = document.querySelector('head');
+  if (!head.querySelector(`script[src="${url}"]`)) {
+    const script = document.createElement('script');
+    script.src = url;
 
-export async function loadScript(src, attrs) {
-  return new Promise((resolve, reject) => {
-    if (!document.querySelector(`head > script[src="${src}"]`)) {
-      const script = document.createElement('script');
-      script.src = src;
-      if (attrs) {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
-        for (const attr in attrs) {
-          script.setAttribute(attr, attrs[attr]);
-        }
-      }
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.append(script);
-    } else {
-      resolve();
+    if (attributes) {
+      Object.keys(attributes).forEach((key) => {
+        script.setAttribute(key, attributes[key]);
+      });
     }
-  });
+
+    head.append(script);
+    script.onload = callback;
+    return script;
+  }
+  return head.querySelector(`script[src="${url}"]`);
+}
+
+/**
+ * Retrieves the query index.
+ * @param {array} [pathnames] The pathnames in query index
+ * @returns {array} The query index
+ */
+export async function fetchIndex(pathnames) {
+  if (!window.pageIndex) {
+    const resp = await fetch('/query-index.json');
+    const json = await resp.json();
+    const lookup = {};
+    json.data.forEach((row) => {
+      lookup[row.path] = row;
+    });
+    window.pageIndex = { data: json.data, lookup };
+  }
+  if (pathnames) {
+    const result = pathnames.map((path) => window.pageIndex.lookup[path]).filter((e) => e);
+    return (result);
+  }
+  return window.pageIndex.data;
 }
 
 /**
@@ -146,7 +160,7 @@ export function toClassName(name) {
 }
 
 /**
- * Sanitizes a string for use as a js property name.
+ * Sanitizes a string for use as a JS property name.
  * @param {string} name The unsanitized string
  * @returns {string} The camelCased name
  */
@@ -206,10 +220,15 @@ export async function decorateIcons(element) {
   svgSprite.innerHTML += symbols;
 
   icons.forEach((span) => {
-    const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
+    const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).replace('icon-', '');
     const parent = span.firstElementChild?.tagName === 'A' ? span.firstElementChild : span;
+    const isFirstEl = parent === parent.parentElement.firstChild;
+    const isLastEl = parent === parent.parentElement.lastChild;
+    if (isFirstEl && !isLastEl) parent.dataset.position = 'first';
+    else if (isLastEl && !isFirstEl) parent.dataset.position = 'last';
+    else if (isFirstEl && isLastEl) parent.dataset.position = 'only';
     // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
-    if (ICONS_CACHE[iconName].styled) {
+    if (ICONS_CACHE[iconName] && ICONS_CACHE[iconName].styled) {
       parent.innerHTML = ICONS_CACHE[iconName].html;
     } else {
       parent.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-${iconName}"/></svg>`;
@@ -227,26 +246,22 @@ export async function fetchPlaceholders(prefix = 'default') {
   const loaded = window.placeholders[`${prefix}-loaded`];
   if (!loaded) {
     window.placeholders[`${prefix}-loaded`] = new Promise((resolve, reject) => {
-      fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
-        .then((resp) => {
-          if (resp.ok) {
-            return resp.json();
-          }
-          throw new Error(`${resp.status}: ${resp.statusText}`);
-        }).then((json) => {
-          const placeholders = {};
-          json.data
-            .filter((placeholder) => placeholder.Key)
-            .forEach((placeholder) => {
+      try {
+        fetch(`${prefix === 'default' ? '' : prefix}/placeholders.json`)
+          .then((resp) => resp.json())
+          .then((json) => {
+            const placeholders = {};
+            json.data.forEach((placeholder) => {
               placeholders[toCamelCase(placeholder.Key)] = placeholder.Text;
             });
-          window.placeholders[prefix] = placeholders;
-          resolve();
-        }).catch((error) => {
-          // error loading placeholders
-          window.placeholders[prefix] = {};
-          reject(error);
-        });
+            window.placeholders[prefix] = placeholders;
+            resolve();
+          });
+      } catch (error) {
+        // error loading placeholders
+        window.placeholders[prefix] = {};
+        reject();
+      }
     });
   }
   await window.placeholders[`${prefix}-loaded`];
@@ -318,7 +333,7 @@ export function readBlockConfig(block) {
  * @param {Element} main The container element
  */
 export function decorateSections(main) {
-  main.querySelectorAll(':scope > div').forEach((section) => {
+  main.querySelectorAll(':scope > div, :scope > button').forEach((section) => {
     const wrappers = [];
     let defaultContent = false;
     [...section.children].forEach((e) => {
@@ -425,7 +440,9 @@ export async function loadBlock(block) {
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
     try {
-      const cssLoaded = loadCSS(`https://delightful-trifle-9b259a.netlify.app/blocks/${blockName}/${blockName}.css`);
+      const cssLoaded = new Promise((resolve) => {
+        loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`, resolve);
+      });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
@@ -560,20 +577,38 @@ export function decorateButtons(element) {
       const twoup = a.parentElement.parentElement;
       if (!a.querySelector('img')) {
         if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
-          a.className = 'button primary'; // default
+          a.className = 'button'; // default
           up.classList.add('button-container');
         }
         if (up.childNodes.length === 1 && up.tagName === 'STRONG'
-          && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
+          && twoup.childNodes.length === 1 && (twoup.tagName === 'P' || twoup.tagName === 'DIV')) {
           a.className = 'button primary';
-          twoup.classList.add('button-container');
+          if (twoup.tagName !== 'DIV') twoup.classList.add('button-container');
+          up.outerHTML = a.outerHTML;
         }
         if (up.childNodes.length === 1 && up.tagName === 'EM'
-          && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
+          && twoup.childNodes.length === 1 && (twoup.tagName === 'P' || twoup.tagName === 'DIV')) {
           a.className = 'button secondary';
-          twoup.classList.add('button-container');
+          if (twoup.tagName !== 'DIV') twoup.classList.add('button-container');
+          up.outerHTML = a.outerHTML;
         }
       }
+    }
+  });
+  // combine adjacent button containers
+  element.querySelectorAll('.button-container').forEach((container) => {
+    const adjacentContainers = [];
+    let next = container.nextElementSibling;
+    while (next && next.className === 'button-container') {
+      adjacentContainers.push(next);
+      next = next.nextElementSibling;
+    }
+    if (adjacentContainers.length) {
+      container.classList.add('button-container-multi');
+      adjacentContainers.forEach((ac) => {
+        [...ac.children].forEach((child) => container.append(child));
+        ac.remove();
+      });
     }
   });
 }
@@ -628,7 +663,6 @@ export function loadFooter(footer) {
  */
 export function setup() {
   window.hlx = window.hlx || {};
-  window.hlx.RUM_MASK_URL = 'full';
   window.hlx.codeBasePath = '';
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
@@ -647,6 +681,7 @@ export function setup() {
  * Auto initializiation.
  */
 function init() {
+  document.body.style.display = 'none';
   setup();
   sampleRUM('top');
 
