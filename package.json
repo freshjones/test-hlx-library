@@ -1,5 +1,5 @@
 {
-  "name": "@adobe/helix-project-boilerplate",
+  "name": "adobe-skeleton",
   "private": true,
   "version": "1.0.0",
   "description": "Starter project for Adobe Helix",
@@ -10,14 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/adobe/helix-project-boilerplate.git"
+    "url": "git+https://github.com/freshjones/test-hlx-library.git"
   },
   "author": "Adobe",
   "license": "Apache License 2.0",
-  "bugs": {
-    "url": "https://github.com/adobe/helix-project-boilerplate/issues"
-  },
-  "homepage": "https://github.com/adobe/helix-project-boilerplate#readme",
   "devDependencies": {
     "@babel/core": "7.21.0",
     "@babel/eslint-parser": "7.19.1",
