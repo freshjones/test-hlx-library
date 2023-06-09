@@ -470,12 +470,12 @@ export async function loadBlock(block, basePath = window.hlx.codeBasePath) {
  * Loads JS and CSS for all blocks in a container element.
  * @param {Element} main The container element
  */
-export async function loadBlocks(main) {
+export async function loadBlocks(main, basePath = window.hlx.codeBasePath) {
   updateSectionsStatus(main);
   const blocks = [...main.querySelectorAll('div.block')];
   for (let i = 0; i < blocks.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
-    await loadBlock(blocks[i]);
+    await loadBlock(blocks[i], basePath);
     updateSectionsStatus(main);
   }
 }
@@ -616,10 +616,10 @@ export function decorateButtons(element) {
 /**
  * Load LCP block and/or wait for LCP in default content.
  */
-export async function waitForLCP(lcpBlocks) {
+export async function waitForLCP(lcpBlocks, basePath = window.hlx.codeBasePath) {
   const block = document.querySelector('.block');
   const hasLCPBlock = (block && lcpBlocks.includes(block.dataset.blockName));
-  if (hasLCPBlock) await loadBlock(block);
+  if (hasLCPBlock) await loadBlock(block, basePath);
 
   document.body.style.display = null;
   const lcpCandidate = document.querySelector('main img');
@@ -639,11 +639,11 @@ export async function waitForLCP(lcpBlocks) {
  * @param {Element} header header element
  * @returns {Promise}
  */
-export function loadHeader(header) {
+export function loadHeader(header, basePath = window.hlx.codeBasePath) {
   const headerBlock = buildBlock('header', '');
   header.append(headerBlock);
   decorateBlock(headerBlock);
-  return loadBlock(headerBlock);
+  return loadBlock(headerBlock, basePath);
 }
 
 /**
@@ -651,11 +651,11 @@ export function loadHeader(header) {
  * @param footer footer element
  * @returns {Promise}
  */
-export function loadFooter(footer) {
+export function loadFooter(footer, basePath = window.hlx.codeBasePath) {
   const footerBlock = buildBlock('footer', '');
   footer.append(footerBlock);
   decorateBlock(footerBlock);
-  return loadBlock(footerBlock);
+  return loadBlock(footerBlock, basePath);
 }
 
 /**
