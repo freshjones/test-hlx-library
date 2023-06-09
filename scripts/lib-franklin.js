@@ -462,7 +462,7 @@ export async function loadBlock(block) {
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`${basePath}/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(`${blockPath}/${blockName}/${blockName}.js`);
             if (mod.default) {
               await mod.default(block);
             }
