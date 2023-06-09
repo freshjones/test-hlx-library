@@ -675,6 +675,15 @@ export function setup() {
       console.log(error);
     }
   }
+  const libraryEl = document.querySelector('script[src$="/scripts/lib-franklin.js"]');
+  if (libraryEl) {
+    try {
+      [window.hlx.libraryBasePath] = new URL(libraryEl.src).pathname.split('/scripts/lib-franklin.js');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
+  }
 }
 
 /**
