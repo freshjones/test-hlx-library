@@ -441,19 +441,13 @@ export async function loadBlock(block) {
     let { blockName } = block.dataset;
 
     let basePath = window.hlx.codeBasePath;
-    let namespace = '';
 
     if (blockName.startsWith('core-')) {
       basePath = window.hlx.libraryBasePath;
       blockName = `${blockName.replace('core-', '')}`;
-      namespace = 'core';
     }
 
-    let blockPath = `${basePath}/blocks`;
-
-    if (namespace) {
-      blockPath += `/${namespace}`;
-    }
+    const blockPath = `${basePath}/blocks`;
 
     try {
       const cssLoaded = new Promise((resolve) => {
