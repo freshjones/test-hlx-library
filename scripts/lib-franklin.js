@@ -441,15 +441,23 @@ export async function loadBlock(block) {
     let { blockName } = block.dataset;
 
     let basePath = window.hlx.codeBasePath;
+    let namespace = '';
 
     if (blockName.startsWith('core-')) {
       basePath = window.hlx.libraryBasePath;
-      blockName = `core/${blockName.replace('core-', '')}`;
+      blockName = `${blockName.replace('core-', '')}`;
+      namespace = 'core';
+    }
+
+    let blockPath = `${basePath}/blocks`;
+
+    if (namespace) {
+      blockPath += `/${namespace}`;
     }
 
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`${basePath}/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(`${blockPath}/${blockName}/${blockName}.css`, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
