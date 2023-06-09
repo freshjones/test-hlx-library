@@ -1,9 +1,9 @@
 /* stylelint-disable no-descending-specificity */
-.core-hero-wrapper.full-width-container.section {
+.core-hero-container.full-width-container.section {
   padding: 0;
 }
 
-.core-hero-wrapper.full-width-container > div.hero-wrapper {
+.core-hero-container.full-width-container > div.hero-wrapper {
   max-width: unset;
 }
 
