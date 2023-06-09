@@ -1,5 +1,5 @@
-import { decorateIcons, loadBlocks, fetchPlaceholders } from '../../scripts/lib-franklin.js';
-import { decorateMain } from '../../scripts/scripts.js';
+import { decorateIcons, loadBlocks, fetchPlaceholders } from '../../../scripts/lib-franklin.js';
+import { decorateMain } from '../../../scripts/scripts.js';
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
