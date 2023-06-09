@@ -686,8 +686,7 @@ export function setup() {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
-function buildISI(main) {
+export function buildISI(main) {
   if (getMetadata('isi') !== 'off') {
     const isi = buildBlock('core-isi', [[`<a href="/global/isi">${window.location.origin}/global/core-isi</a>`]]);
     const newSection = document.createElement('div');

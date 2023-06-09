@@ -13,6 +13,7 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata,
+  buildISI,
 } from './lib-franklin.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -111,14 +112,6 @@ function buildHeroBlock(main) {
   }
 }
 
-function buildISI(main) {
-  if (getMetadata('isi') !== 'off') {
-    const isi = buildBlock('isi', [[`<a href="/global/isi">${window.location.origin}/global/isi</a>`]]);
-    const newSection = document.createElement('div');
-    newSection.append(isi);
-    main.append(newSection);
-  }
-}
 
 /**
  * Builds all synthetic blocks in a container element.
