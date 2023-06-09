@@ -7,31 +7,31 @@
   max-width: unset;
 }
 
-.hero {
+.core-hero {
   background-color: var(--overlay-background-color);
   color: var(--overlay-text-color);
 }
 
-.hero.data, .hero.testimonial {
+.core-hero.data, .core-hero.testimonial {
   background-color: var(--highlight-background-color);
   color: initial;
 }
 
-.hero h1, .hero h2 {
+.core-hero h1, .core-hero h2 {
   color: inherit;
 }
 
-.hero.data h1, .hero.testimonial h1,
-.hero.data h2, .hero.testimonial h2 {
+.core-hero.data h1, .core-hero.testimonial h1,
+.core-hero.data h2, .core-hero.testimonial h2 {
   color: var(--link-color);
 }
 
-.hero h1 strong {
+.core-hero h1 strong {
   color: var(--secondary-color);
   font-weight: inherit;
 }
 
-.hero .hero-footnote {
+.core-hero .core-hero-footnote {
   margin: 0;
   color: var(--gray-60);
   font-size: var(--body-font-size-s);
@@ -39,23 +39,23 @@
 }
 
 /* banner */
-.hero .hero-banner {
+.core-hero .hero-banner {
   position: relative;
   display: grid;
   grid-template-rows: repeat(2, auto);
 }
 
-.hero .hero-banner .hero-banner-img {
+.core-hero .hero-banner .hero-banner-img {
   position: relative;
   height: 60vw;
 }
 
-.hero.data .hero-banner .hero-banner-img,
-.hero.testimonial .hero-banner .hero-banner-img {
+.core-hero.data .hero-banner .core-hero-banner-img,
+.core-hero.testimonial .hero-banner .hero-banner-img {
   height: 100vw;
 }
 
-.hero .hero-banner .hero-banner-img picture {
+.core-hero .hero-banner .hero-banner-img picture {
   box-sizing: border-box;
   position: absolute;
   top: 0;
@@ -65,7 +65,7 @@
   object-fit: cover;
 }
 
-.hero .hero-banner .hero-banner-img img {
+.core-hero .hero-banner .hero-banner-img img {
   display: block;
   width: 100%;
   height: 100%;
@@ -73,25 +73,25 @@
 }
 
 @media (min-width: 600px) {
-  .hero .hero-banner .hero-banner-img {
+  .core-hero .hero-banner .hero-banner-img {
     height: 40vw;
     max-height: 596px;
   }
 
-  .hero.data .hero-banner .hero-banner-img,
-  .hero.testimonial .hero-banner .hero-banner-img {
+  .core-hero.data .hero-banner .hero-banner-img,
+  .core-hero.testimonial .hero-banner .hero-banner-img {
     height: 50vw;
   }
 }
 
 @media (min-width: 900px) {
-  .hero .hero-banner .hero-banner-img {
+  .core-hero .hero-banner .hero-banner-img {
     height: calc((100vw - var(--nav-width)) * .4);
   }
 }
 
 /* overlay */
-.hero .hero-banner .hero-banner-overlay {
+.core-hero .hero-banner .hero-banner-overlay {
   position: absolute;
   background: linear-gradient(transparent, var(--text-color));
   top: 50%;
@@ -101,22 +101,22 @@
   z-index: 1;
 }
 
-.hero.data .hero-banner .hero-banner-overlay,
-.hero.testimonial .hero-banner .hero-banner-overlay {
+.core-hero.data .hero-banner .hero-banner-overlay,
+.core-hero.testimonial .hero-banner .hero-banner-overlay {
   top: 0;
   background: linear-gradient(var(--text-color), transparent);
 }
 
 @media (min-width: 600px) {
-  .hero.data .hero-banner .hero-banner-overlay,
-  .hero.testimonial .hero-banner .hero-banner-overlay {
+  .core-hero.data .hero-banner .hero-banner-overlay,
+  .core-hero.testimonial .hero-banner .hero-banner-overlay {
     top: 50%;
     background: linear-gradient(transparent, var(--text-color));
   }
 }
 
 /* caption */
-.hero .hero-banner .hero-banner-caption {
+.core-hero .hero-banner .hero-banner-caption {
   position: absolute;
   right: var(--spacing-horizontal);
   bottom: var(--spacing-30);
@@ -125,24 +125,24 @@
   color: var(--overlay-text-color);
 }
 
-.hero.data .hero-banner .hero-banner-caption,
-.hero.testimonial .hero-banner .hero-banner-caption {
+.core-hero.data .hero-banner .hero-banner-caption,
+.core-hero.testimonial .hero-banner .hero-banner-caption {
   top: var(--spacing-30);
   bottom: unset;
 }
 
-.hero.testimonial .hero-banner .hero-banner-caption {
+.core-hero.testimonial .hero-banner .hero-banner-caption {
   right: unset;
   left: var(--spacing-horizontal);
 }
 
-.hero .hero-banner .hero-banner-caption p {
+.core-hero .hero-banner .hero-banner-caption p {
   margin: 0;
 }
 
 @media (min-width: 600px) {
-  .hero.data .hero-banner .hero-banner-caption,
-  .hero.testimonial .hero-banner .hero-banner-caption {
+  .core-hero.data .hero-banner .hero-banner-caption,
+  .core-hero.testimonial .hero-banner .hero-banner-caption {
     top: unset;
     bottom: var(--spacing-30);
     max-width: calc(100% - 356px - (var(--spacing-horizontal) * 2));
@@ -150,7 +150,7 @@
 }
 
 /* cta */
-.hero .hero-banner .hero-banner-cta {
+.core-hero .hero-banner .hero-banner-cta {
   position: absolute;
   top: var(--spacing-50);
   right: 0;
@@ -158,11 +158,11 @@
   max-width: calc(100% - var(--spacing-horizontal));
 }
 
-.hero .hero-banner .hero-banner-cta .button-container {
+.core-hero .hero-banner .hero-banner-cta .button-container {
   margin: 0;
 }
 
-.hero .hero-banner .hero-banner-cta .button {
+.core-hero .hero-banner .hero-banner-cta .button {
   position: relative;
   min-width: 182px;
   border-top-right-radius: 0;
@@ -171,7 +171,7 @@
   text-align: left;
 }
 
-.hero .hero-banner .hero-banner-cta .button::after {
+.core-hero .hero-banner .hero-banner-cta .button::after {
   content: '';
   position: absolute;
   top: 50%;
@@ -185,18 +185,18 @@
 }
 
 @media (min-width: 600px) {
-  .hero .hero-banner .hero-banner-cta {
+  .core-hero .hero-banner .hero-banner-cta {
     top: var(--spacing-60);
   }
 
-  .hero .hero-banner .hero-banner-cta .button {
+  .core-hero .hero-banner .hero-banner-cta .button {
     position: relative;
     min-width: 212px;
   }
 }
 
 /* callout */
-.hero .hero-banner .hero-banner-callout {
+.core-hero .hero-banner .hero-banner-callout {
   box-sizing: border-box;
   position: absolute;
   bottom: 0;
@@ -208,220 +208,220 @@
   z-index: 1;
 }
 
-.hero.data .hero-banner .hero-banner-callout {
+.core-hero.data .hero-banner .hero-banner-callout {
   left: 0;
   border-radius: 0 16px 0 0;
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout {
+.core-hero.testimonial .hero-banner .hero-banner-callout {
   border-radius: 16px 0 0;
   right: 0;
 }
 
-.hero .hero-banner .hero-banner-callout h2,
-.hero .hero-banner .hero-banner-callout p {
+.core-hero .hero-banner .hero-banner-callout h2,
+.core-hero .hero-banner .hero-banner-callout p {
   margin: 0;
 }
 
-.hero .hero-banner .hero-banner-callout h2 {
+.core-hero .hero-banner .hero-banner-callout h2 {
   font-size: var(--heading-font-size-xs);
 }
 
-.hero .hero-banner .hero-banner-callout span.icon,
-.hero .hero-banner .hero-banner-callout svg {
+.core-hero .hero-banner .hero-banner-callout span.icon,
+.core-hero .hero-banner .hero-banner-callout svg {
   display: inline-block;
   width: 64px;
   height: 64px;
   fill: var(--link-color);
 }
 
-.hero.data .hero-banner .hero-banner-callout > div {
+.core-hero.data .hero-banner .hero-banner-callout > div {
   display: grid;
   grid-template-columns: 64px 1fr;
   gap: var(--spacing-20);
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout figure,
-.hero.testimonial .hero-banner .hero-banner-callout blockquote {
+.core-hero.testimonial .hero-banner .hero-banner-callout figure,
+.core-hero.testimonial .hero-banner .hero-banner-callout blockquote {
   margin: 0;
   padding: 0;
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout blockquote {
+.core-hero.testimonial .hero-banner .hero-banner-callout blockquote {
   color: var(--secondary-color);
   font-size: var(--heading-font-size-xs);
   line-height: 110%;
   font-weight: bold;
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout blockquote p:first-of-type {
+.core-hero.testimonial .hero-banner .hero-banner-callout blockquote p:first-of-type {
   text-indent: -.6ch;
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout blockquote p:first-of-type::before,
-.hero.testimonial .hero-banner .hero-banner-callout blockquote p:last-of-type::after {
+.core-hero.testimonial .hero-banner .hero-banner-callout blockquote p:first-of-type::before,
+.core-hero.testimonial .hero-banner .hero-banner-callout blockquote p:last-of-type::after {
   line-height: 0;
   font-weight: normal;
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout blockquote p:first-of-type::before {
+.core-hero.testimonial .hero-banner .hero-banner-callout blockquote p:first-of-type::before {
   content: '“';
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout blockquote p:last-of-type::after {
+.core-hero.testimonial .hero-banner .hero-banner-callout blockquote p:last-of-type::after {
   content: '”';
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout figcaption {
+.core-hero.testimonial .hero-banner .hero-banner-callout figcaption {
   margin-top: var(--spacing-30);
   color: var(--gray-60);
   font-size: var(--body-font-size-xs);
 }
 
-.hero.testimonial .hero-banner .hero-banner-callout figcaption strong {
+.core-hero.testimonial .hero-banner .hero-banner-callout figcaption strong {
   font-size: var(--body-font-size-m);
 }
 
 @media (min-width: 1200px) {
-  .hero .hero-banner .hero-banner-callout {
+  .core-hero .hero-banner .hero-banner-callout {
     max-width: unset;
     width: auto;
   }
 
-  .hero.data .hero-banner .hero-banner-callout > div,
-  .hero.testimonial .hero-banner .hero-banner-callout > div {
+  .core-hero.data .hero-banner .hero-banner-callout > div,
+  .core-hero.testimonial .hero-banner .hero-banner-callout > div {
     width: 356px;
   }
 }
 
 
 /* body */
-.hero .hero-body {
+.core-hero .hero-body {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-40);
   padding: var(--spacing-40) var(--spacing-horizontal);
 }
 
-.hero .hero-body .button {
+.core-hero .hero-body .button {
   width: 100%;
 }
 
-.hero .hero-body .button.secondary {
+.core-hero .hero-body .button.secondary {
   width: unset;
 }
 
-.hero .hero-body > div {
+.core-hero .hero-body > div {
   margin: 0;
 }
 
-.hero .hero-body > div > :first-child {
+.core-hero .hero-body > div > :first-child {
   margin-top: 0;
 }
 
-.hero .hero-body > div > :last-child {
+.core-hero .hero-body > div > :last-child {
   margin-bottom: 0;
 }
 
 @media (min-width: 600px) {
-  .hero .hero-body {
+  .core-hero .hero-body {
     flex-direction: row;
     padding: var(--spacing-50) var(--spacing-horizontal);
   }
 
-  .hero .hero-body > div:last-child {
+  .core-hero .hero-body > div:last-child {
     flex: 0 0 33%;
   }
 
-  .hero .hero-body > div:first-child {
+  .core-hero .hero-body > div:first-child {
     flex-grow: 1;
     max-width: 80%;
   }
 }
 
 @media (min-width: 1200px) {
-  .hero .hero-body {
+  .core-hero .hero-body {
     grid-template-columns: 3fr 2fr;
     gap: var(--spacing-50);
     max-width: var(--content-width);
     margin: auto;
   }
 
-  .hero .hero-body > div:last-child {
+  .core-hero .hero-body > div:last-child {
     flex: 0 0 40%;
   }
 
-  .hero .hero-body > div:first-child {
+  .core-hero .hero-body > div:first-child {
     flex-grow: 1;
   }
 }
 
 /* split variant */
-.hero.split .hero-banner,
-.hero.split .hero-body {
+.core-hero.split .hero-banner,
+.core-hero.split .hero-body {
   display: block;
 }
 
 @media (min-width: 600px) {
-  .hero.split > div {
+  .core-hero.split > div {
     display: flex;
     gap: var(--spacing-horizontal);
   }
 
-  .hero.split .hero-banner {
+  .core-hero.split .hero-banner {
     flex: 0 0 50%;
   }
 
-  .hero.split .hero-banner .hero-banner-img {
+  .core-hero.split .hero-banner .hero-banner-img {
     width: 100%;
     height: 100%;
   }
 
-  .hero.split .hero-body {
+  .core-hero.split .hero-body {
     padding: 0;
   }
 
-  .hero.split .hero-body > :first-child {
+  .core-hero.split .hero-body > :first-child {
     margin-top: 0;
   }
-  
-  .hero.split .hero-body > :last-child {
+
+  .core-hero.split .hero-body > :last-child {
     margin-bottom: 0;
   }
 }
 
 /* overlay variant */
-.hero.overlay .hero-body .button {
+.core-hero.overlay .hero-body .button {
   border-color: inherit;
   color: inherit;
 }
 
-.hero.overlay .hero-body .button.primary {
+.core-hero.overlay .hero-body .button.primary {
   border-color: var(--overlay-background-color);
   background-color: var(--overlay-text-color);
   color: var(--overlay-background-color);
 }
 
-.hero.overlay .hero-body .button.secondary {
+.core-hero.overlay .hero-body .button.secondary {
   border-top-color: transparent;
 }
 
 /* inset variant */
-.hero.inset {
+.core-hero.inset {
   background-color: unset;
   color: unset;
 }
 
-.hero.inset h1, .hero.inset h2 {
+.core-hero.inset h1, .hero.inset h2 {
   color: var(--link-color);
 }
 
-.hero.inset .hero-banner .hero-banner-img img,
-.hero.inset img {
+.core-hero.inset .hero-banner .hero-banner-img img,
+.core-hero.inset img {
   border-radius: 16px;
 }
 
-.hero.inset .hero-body {
+.core-hero.inset .hero-body {
   padding-left: 0;
   padding-right: 0;
 }
