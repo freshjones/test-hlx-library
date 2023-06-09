@@ -173,7 +173,7 @@ const ICONS_CACHE = {};
  * Replace icons with inline SVG and prefix with codeBasePath.
  * @param {Element} [element] Element containing icons
  */
-export async function decorateIcons(element, basePath = window.hlx.codeBasePath) {
+export async function decorateIcons(element, basePath = window.hlx.libraryBasePath) {
   // Prepare the inline sprite
   let svgSprite = document.getElementById('franklin-svg-sprite');
   if (!svgSprite) {
@@ -434,7 +434,7 @@ export function buildBlock(blockName, content) {
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
  */
-export async function loadBlock(block, basePath = window.hlx.codeBasePath) {
+export async function loadBlock(block, basePath = window.hlx.libraryBasePath) {
   const status = block.dataset.blockStatus;
   if (status !== 'loading' && status !== 'loaded') {
     block.dataset.blockStatus = 'loading';
@@ -470,7 +470,7 @@ export async function loadBlock(block, basePath = window.hlx.codeBasePath) {
  * Loads JS and CSS for all blocks in a container element.
  * @param {Element} main The container element
  */
-export async function loadBlocks(main, basePath = window.hlx.codeBasePath) {
+export async function loadBlocks(main, basePath) {
   updateSectionsStatus(main);
   const blocks = [...main.querySelectorAll('div.block')];
   for (let i = 0; i < blocks.length; i += 1) {
@@ -616,7 +616,7 @@ export function decorateButtons(element) {
 /**
  * Load LCP block and/or wait for LCP in default content.
  */
-export async function waitForLCP(lcpBlocks, basePath = window.hlx.codeBasePath) {
+export async function waitForLCP(lcpBlocks, basePath) {
   const block = document.querySelector('.block');
   const hasLCPBlock = (block && lcpBlocks.includes(block.dataset.blockName));
   if (hasLCPBlock) await loadBlock(block, basePath);
@@ -639,7 +639,7 @@ export async function waitForLCP(lcpBlocks, basePath = window.hlx.codeBasePath) 
  * @param {Element} header header element
  * @returns {Promise}
  */
-export function loadHeader(header, basePath = window.hlx.codeBasePath) {
+export function loadHeader(header, basePath) {
   const headerBlock = buildBlock('header', '');
   header.append(headerBlock);
   decorateBlock(headerBlock);
@@ -651,7 +651,7 @@ export function loadHeader(header, basePath = window.hlx.codeBasePath) {
  * @param footer footer element
  * @returns {Promise}
  */
-export function loadFooter(footer, basePath = window.hlx.codeBasePath) {
+export function loadFooter(footer, basePath) {
   const footerBlock = buildBlock('footer', '');
   footer.append(footerBlock);
   decorateBlock(footerBlock);
@@ -664,12 +664,22 @@ export function loadFooter(footer, basePath = window.hlx.codeBasePath) {
 export function setup() {
   window.hlx = window.hlx || {};
   window.hlx.codeBasePath = '';
+  window.hlx.libraryBasePath = '';
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
   const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');
   if (scriptEl) {
     try {
       [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
+  }
+  const libraryEl = document.querySelector('script[src$="/scripts/lib-franklin.js"]');
+  if (libraryEl) {
+    try {
+      [window.hlx.libraryBasePath] = new URL(libraryEl.src).pathname.split('/scripts/lib-franklin.js');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
