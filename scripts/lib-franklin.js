@@ -190,7 +190,7 @@ export async function decorateIcons(element) {
     if (!ICONS_CACHE[iconName]) {
       ICONS_CACHE[iconName] = true;
       try {
-        const response = await fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`);
+        const response = await fetch(`${window.hlx.libraryBasePath}/icons/${iconName}.svg`);
         if (!response.ok) {
           ICONS_CACHE[iconName] = false;
           return;
@@ -441,7 +441,7 @@ export async function loadBlock(block) {
     const { blockName } = block.dataset;
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(`${window.hlx.libraryBasePath}/blocks/${blockName}/${blockName}.css`, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
