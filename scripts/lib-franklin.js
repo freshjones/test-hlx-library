@@ -173,7 +173,7 @@ const ICONS_CACHE = {};
  * Replace icons with inline SVG and prefix with codeBasePath.
  * @param {Element} [element] Element containing icons
  */
-export async function decorateIcons(element, basePath = window.hlx.libraryBasePath) {
+export async function decorateIcons(element) {
   // Prepare the inline sprite
   let svgSprite = document.getElementById('franklin-svg-sprite');
   if (!svgSprite) {
@@ -190,7 +190,7 @@ export async function decorateIcons(element, basePath = window.hlx.libraryBasePa
     if (!ICONS_CACHE[iconName]) {
       ICONS_CACHE[iconName] = true;
       try {
-        const response = await fetch(`${basePath}/icons/${iconName}.svg`);
+        const response = await fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`);
         if (!response.ok) {
           ICONS_CACHE[iconName] = false;
           return;
@@ -434,19 +434,19 @@ export function buildBlock(blockName, content) {
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
  */
-export async function loadBlock(block, basePath = window.hlx.libraryBasePath) {
+export async function loadBlock(block) {
   const status = block.dataset.blockStatus;
   if (status !== 'loading' && status !== 'loaded') {
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`${basePath}/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.css`, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`${basePath}/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(`../blocks/${blockName}/${blockName}.js`);
             if (mod.default) {
               await mod.default(block);
             }
@@ -470,12 +470,12 @@ export async function loadBlock(block, basePath = window.hlx.libraryBasePath) {
  * Loads JS and CSS for all blocks in a container element.
  * @param {Element} main The container element
  */
-export async function loadBlocks(main, basePath) {
+export async function loadBlocks(main) {
   updateSectionsStatus(main);
   const blocks = [...main.querySelectorAll('div.block')];
   for (let i = 0; i < blocks.length; i += 1) {
     // eslint-disable-next-line no-await-in-loop
-    await loadBlock(blocks[i], basePath);
+    await loadBlock(blocks[i]);
     updateSectionsStatus(main);
   }
 }
@@ -616,10 +616,10 @@ export function decorateButtons(element) {
 /**
  * Load LCP block and/or wait for LCP in default content.
  */
-export async function waitForLCP(lcpBlocks, basePath) {
+export async function waitForLCP(lcpBlocks) {
   const block = document.querySelector('.block');
   const hasLCPBlock = (block && lcpBlocks.includes(block.dataset.blockName));
-  if (hasLCPBlock) await loadBlock(block, basePath);
+  if (hasLCPBlock) await loadBlock(block);
 
   document.body.style.display = null;
   const lcpCandidate = document.querySelector('main img');
@@ -639,11 +639,11 @@ export async function waitForLCP(lcpBlocks, basePath) {
  * @param {Element} header header element
  * @returns {Promise}
  */
-export function loadHeader(header, basePath) {
+export function loadHeader(header) {
   const headerBlock = buildBlock('header', '');
   header.append(headerBlock);
   decorateBlock(headerBlock);
-  return loadBlock(headerBlock, basePath);
+  return loadBlock(headerBlock);
 }
 
 /**
@@ -651,11 +651,11 @@ export function loadHeader(header, basePath) {
  * @param footer footer element
  * @returns {Promise}
  */
-export function loadFooter(footer, basePath) {
+export function loadFooter(footer) {
   const footerBlock = buildBlock('footer', '');
   footer.append(footerBlock);
   decorateBlock(footerBlock);
-  return loadBlock(footerBlock, basePath);
+  return loadBlock(footerBlock);
 }
 
 /**
@@ -664,7 +664,6 @@ export function loadFooter(footer, basePath) {
 export function setup() {
   window.hlx = window.hlx || {};
   window.hlx.codeBasePath = '';
-  window.hlx.libraryBasePath = '';
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
 
   const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');
@@ -687,6 +686,15 @@ export function setup() {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
+function buildISI(main) {
+  if (getMetadata('isi') !== 'off') {
+    const isi = buildBlock('core-isi', [[`<a href="/global/isi">${window.location.origin}/global/core-isi</a>`]]);
+    const newSection = document.createElement('div');
+    newSection.append(isi);
+    main.append(newSection);
+  }
+}
 /**
  * Auto initializiation.
  */
