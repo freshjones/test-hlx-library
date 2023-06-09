@@ -438,9 +438,14 @@ export async function loadBlock(block) {
   const status = block.dataset.blockStatus;
   if (status !== 'loading' && status !== 'loaded') {
     block.dataset.blockStatus = 'loading';
-    const { blockName } = block.dataset;
+    let { blockName } = block.dataset;
 
-    const basePath = blockName.startsWith('core-') ? window.hlx.libraryBasePath : window.hlx.codeBasePath;
+    let basePath = window.hlx.codeBasePath;
+
+    if (blockName.startsWith('core-')) {
+      basePath = window.hlx.libraryBasePath;
+      blockName = `core/${blockName.replace('core-', '')}`;
+    }
 
     try {
       const cssLoaded = new Promise((resolve) => {
