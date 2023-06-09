@@ -112,7 +112,6 @@ function buildHeroBlock(main) {
   }
 }
 
-
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
@@ -120,7 +119,7 @@ function buildHeroBlock(main) {
 async function buildAutoBlocks(main) {
   try {
     await buildAnnouncement();
-    buildHeroBlock(main);
+    // buildHeroBlock(main);
     buildISI(main);
   } catch (error) {
     // eslint-disable-next-line no-console
