@@ -173,7 +173,7 @@ const ICONS_CACHE = {};
  * Replace icons with inline SVG and prefix with codeBasePath.
  * @param {Element} [element] Element containing icons
  */
-export async function decorateIcons(element) {
+export async function decorateIcons(element, basePath = window.hlx.codeBasePath) {
   // Prepare the inline sprite
   let svgSprite = document.getElementById('franklin-svg-sprite');
   if (!svgSprite) {
@@ -190,7 +190,7 @@ export async function decorateIcons(element) {
     if (!ICONS_CACHE[iconName]) {
       ICONS_CACHE[iconName] = true;
       try {
-        const response = await fetch(`${window.hlx.libraryBasePath}/icons/${iconName}.svg`);
+        const response = await fetch(`${basePath}/icons/${iconName}.svg`);
         if (!response.ok) {
           ICONS_CACHE[iconName] = false;
           return;
@@ -434,19 +434,19 @@ export function buildBlock(blockName, content) {
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
  */
-export async function loadBlock(block) {
+export async function loadBlock(block, basePath = window.hlx.codeBasePath) {
   const status = block.dataset.blockStatus;
   if (status !== 'loading' && status !== 'loaded') {
     block.dataset.blockStatus = 'loading';
     const { blockName } = block.dataset;
     try {
       const cssLoaded = new Promise((resolve) => {
-        loadCSS(`${window.hlx.libraryBasePath}/blocks/${blockName}/${blockName}.css`, resolve);
+        loadCSS(`${basePath}/blocks/${blockName}/${blockName}.css`, resolve);
       });
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`${window.hlx.libraryBasePath}/blocks/${blockName}/${blockName}.js`);
+            const mod = await import(`${basePath}/blocks/${blockName}/${blockName}.js`);
             if (mod.default) {
               await mod.default(block);
             }
@@ -670,15 +670,6 @@ export function setup() {
   if (scriptEl) {
     try {
       [window.hlx.codeBasePath] = new URL(scriptEl.src).pathname.split('/scripts/scripts.js');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
-  }
-  const libraryEl = document.querySelector('script[src$="/scripts/lib-franklin.js"]');
-  if (libraryEl) {
-    try {
-      [window.hlx.libraryBasePath] = new URL(libraryEl.src).pathname.split('/scripts/lib-franklin.js');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.log(error);
