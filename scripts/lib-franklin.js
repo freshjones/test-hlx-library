@@ -697,12 +697,11 @@ export function setup() {
 }
 
 export function buildISI(main) {
-  if (getMetadata('isi') !== 'off') {
-    const isi = buildBlock('core-isi', [[`<a href="/global/isi">${window.location.origin}/global/core-isi</a>`]]);
-    const newSection = document.createElement('div');
-    newSection.append(isi);
-    main.append(newSection);
-  }
+  if (getMetadata('isi') === 'off') return;
+  const isi = buildBlock('core-isi', [[`<a href="/global/isi">${window.location.origin}/global/core-isi</a>`]]);
+  const newSection = document.createElement('div');
+  newSection.append(isi);
+  main.append(newSection);
 }
 /**
  * Auto initializiation.
